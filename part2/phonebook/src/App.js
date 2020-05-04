@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import Notification from './components/Notification'
 import PersonsService from './services/PersonsService'
 
 const App = () => {
@@ -9,6 +10,9 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ nameFilter, setNameFilter ] = useState('')
+  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notificationMessageColor, setNotificationColor] = useState('green')
+  
 
   const addName = (event) => {
     event.preventDefault();
@@ -24,7 +28,10 @@ const App = () => {
 
       if(window.confirm(`${alreadyAddedPerson.name} is already added to the phonebook, replace the old number with a new one?`)) {
         PersonsService.updatePerson(alreadyAddedPerson.id, newOrUpdatedPerson)
-                      .then(updatedPerson => setPersons(persons.map(p => p.id !== updatedPerson.id ? p : updatedPerson)))
+                      .then(updatedPerson => {
+                        notifyUser(`Successfully updated ${updatedPerson.name}`, 'green')
+                        setPersons(persons.map(p => p.id !== updatedPerson.id ? p : updatedPerson))})
+                      .catch(error => notifyUser(`unsuccessful update: ${error}`, 'red'))
       }
       else {
         return;
@@ -32,11 +39,22 @@ const App = () => {
     }
     else {
       PersonsService.addPerson(newOrUpdatedPerson)
-                    .then(createdPerson => setPersons(persons.map(p => p.id !== createdPerson.id ? p : createdPerson)))
+                    .then(createdPerson => {
+                      notifyUser(`Successfully added ${createdPerson.name}`, 'green')
+                      setPersons(persons.map(p => p.id !== createdPerson.id ? p : createdPerson))})
+                    .catch(error => notifyUser(`unsuccessful add: ${error}`, 'red'))
     }
 
     setNewName('');
     setNewNumber('');
+  }
+
+  const notifyUser = (message, color) => {
+    setNotificationColor(color)
+    setNotificationMessage(message)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
   }
 
   const handleDelete = event => {
@@ -44,8 +62,10 @@ const App = () => {
 
       if(window.confirm(`Delete ${persons.find(p => p.id === idOfDeletedPerson).name}?`)) {
         PersonsService.deletePerson(idOfDeletedPerson)
-                      .then(setPersons(persons.filter(p => p.id !== idOfDeletedPerson)))
-                      .catch(error => alert(`unsuccessful delete: ${error}`))
+                      .then(() => {
+                        notifyUser('Successful remove', 'green')
+                        setPersons(persons.filter(p => p.id !== idOfDeletedPerson))})
+                      .catch(error => notifyUser(`unsuccessful delete: ${error}`, 'red'))
       }
   }
 
@@ -57,6 +77,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notificationMessage} color={notificationMessageColor} />
       <div>
         <Filter filterValue={nameFilter} changeHandler={event => setNameFilter(event.target.value)} />
       </div>

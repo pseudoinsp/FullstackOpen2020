@@ -1,13 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const CountryDetails = ({countries}) => {
+const CountryDetails = ({country}) => {
+  return (
+    <>
+      <h1>{country.name}</h1>
+      <br/>
+      capital {country.capital}
+      <br/>
+      population {country.population}
+
+      <h2>languages</h2>
+      <ul>
+        {country.languages.map(l => <li key={l.name}>{l.name}</li>)}
+      </ul>
+
+      <img src={country.flag} alt="flag" width="140" height="70" /> 
+    </>
+  )
+}
+
+const CountryListElement = ({country, isDetailed, showClickHandler}) => {
+
+  console.log(isDetailed);
+
+  if(isDetailed) {
+    return (
+      <div>
+      <p key={country.name}>
+        {country.name} <button id={country.name} onClick={showClickHandler}>show</button>
+        <CountryDetails country={country} />
+      </p>
+        
+      </div>
+    )
+  }
+
+  return (
+    <p key={country.name}>
+      {country.name} <button id={country.name} onClick={showClickHandler}>show</button>
+    </p>
+  )
+}
+
+const CountryList = ({countries, detailedCountries: detailedCountryNames, showClickHandler}) => {
 
   if(countries.length > 10)
   {
     return (
       <>
-        <p>Too many matches, specify another filter</p>
+        <p>Too many matches, specify a more specific filter</p>
       </>
     )
   }
@@ -15,27 +57,17 @@ const CountryDetails = ({countries}) => {
   if(countries.length > 1) {
     return (
       <>
-        {countries.map(country => <p key={country.name}>{country.name}</p>)}
+        {countries.map(country => 
+          <CountryListElement key={country.name} country={country} isDetailed={detailedCountryNames.includes(country.name)} showClickHandler={showClickHandler} />
+        )}
       </>
     )
   }
 
   if(countries.length === 1) {
-    let onlyMatchedCountry = countries[0];
     return (
       <>
-        <h1>{onlyMatchedCountry.name}</h1>
-        <br/>
-        capital {onlyMatchedCountry.capital}
-        <br/>
-        population {onlyMatchedCountry.population}
-
-        <h2>languages</h2>
-        <ul>
-          {onlyMatchedCountry.languages.map(l => <li key={l.name}>{l.name}</li>)}
-        </ul>
-
-        <img src={onlyMatchedCountry.flag} alt="flag" width="80" height="80" /> 
+        <CountryDetails country={countries[0]} />
       </>
     )
   }
@@ -51,7 +83,7 @@ function App() {
 
   const [countryQuery, setCountryQuery] = useState('');
   const [countryData, setCountryData] = useState([]);
-  
+  const [detailedCountryNames, setDetailedCountryNames] = useState([]);
 
   useEffect(() => {
     axios.get(`https://restcountries.eu/rest/v2/name/${countryQuery}`)
@@ -63,6 +95,16 @@ function App() {
            console.log(err)
          })
   }, [countryQuery]);
+
+  const HandleShowClick = (event) => 
+  {
+      let selectedCountryName = event.target.id;
+
+      if(!detailedCountryNames.includes(selectedCountryName))
+      {
+        setDetailedCountryNames(detailedCountryNames.concat(selectedCountryName));
+      }
+  }
 
   const HandleQueryValueChange = event => 
   {
@@ -76,7 +118,7 @@ function App() {
       find countries <input value={countryQuery} onChange={HandleQueryValueChange} />
 
       <div>
-      <CountryDetails countries={countryData} />
+      <CountryList countries={countryData} detailedCountries={detailedCountryNames} showClickHandler={HandleShowClick} />
     </div>
     </div>
   );

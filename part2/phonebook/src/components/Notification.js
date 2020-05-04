@@ -3,7 +3,7 @@ import React from 'react'
 
 const Notification = ({ message, color }) => {
 
-    const errorStyle = {
+    const notificationStyle = {
         color: color,
         background: 'lightgrey',
         fontSize: 20,
@@ -18,7 +18,7 @@ const Notification = ({ message, color }) => {
     }
   
     return (
-      <div style={errorStyle}>
+      <div style={notificationStyle}>
         {message}
       </div>
     )

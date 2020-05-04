@@ -27,11 +27,10 @@ const CountryListElement = ({country, isDetailed, showClickHandler}) => {
   if(isDetailed) {
     return (
       <div>
-      <p key={country.name}>
-        {country.name} <button id={country.name} onClick={showClickHandler}>show</button>
-        <CountryDetails country={country} />
-      </p>
-        
+        <p key={country.name}>
+          {country.name}
+          <CountryDetails country={country} />
+        </p>
       </div>
     )
   }
@@ -43,7 +42,7 @@ const CountryListElement = ({country, isDetailed, showClickHandler}) => {
   )
 }
 
-const CountryList = ({countries, detailedCountries: detailedCountryNames, showClickHandler}) => {
+const CountryList = ({countries, detailedCountryNames, showClickHandler}) => {
 
   if(countries.length > 10)
   {
@@ -67,7 +66,7 @@ const CountryList = ({countries, detailedCountries: detailedCountryNames, showCl
   if(countries.length === 1) {
     return (
       <>
-        <CountryDetails country={countries[0]} />
+        <CountryListElement country={countries[0]} isDetailed="true" />
       </>
     )
   }
@@ -118,7 +117,7 @@ function App() {
       find countries <input value={countryQuery} onChange={HandleQueryValueChange} />
 
       <div>
-      <CountryList countries={countryData} detailedCountries={detailedCountryNames} showClickHandler={HandleShowClick} />
+      <CountryList countries={countryData} detailedCountryNames={detailedCountryNames} showClickHandler={HandleShowClick} />
     </div>
     </div>
   );

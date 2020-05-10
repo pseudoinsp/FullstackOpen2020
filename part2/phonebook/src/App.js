@@ -75,7 +75,7 @@ const App = () => {
   useEffect(() => {
     PersonsService.getAll()
                 .then(ps => setPersons(ps))
-  }, [persons])
+  }, [newName, nameFilter])
 
   return (
     <div>

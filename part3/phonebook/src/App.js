@@ -41,7 +41,8 @@ const App = () => {
     else {
       PersonsService.addPerson(newOrUpdatedPerson)
                     .then(createdPerson => {
-                      notifyUser(`Successfully added ${createdPerson.name}`, 'green')
+                      console.log(createdPerson)
+                      notifyUser(`Person successfully added`, 'green')
                       setPersons(persons.map(p => p.id !== createdPerson.id ? p : createdPerson))
                     })
                     .catch(error => notifyUser(`unsuccessful add: ${error}`, 'red'))

@@ -61,8 +61,7 @@ const App = () => {
   }
 
   const handleDelete = event => {
-      let idOfDeletedPerson = Number(event.target.id);
-
+      let idOfDeletedPerson = String(event.target.id);
       if(window.confirm(`Delete ${persons.find(p => p.id === idOfDeletedPerson).name}?`)) {
         PersonsService.deletePerson(idOfDeletedPerson)
                       .then(() => {

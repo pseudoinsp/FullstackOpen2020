@@ -45,7 +45,8 @@ const App = () => {
                       notifyUser(`Person successfully added`, 'green')
                       setPersons(persons.map(p => p.id !== createdPerson.id ? p : createdPerson))
                     })
-                    .catch(error => notifyUser(`unsuccessful add: ${error}`, 'red'))
+                    .catch(error => {
+                      notifyUser(`unsuccessful add. Reason: ${error.response.data.error}`, 'red')})
     }
 
     setNewName('');

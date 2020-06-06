@@ -56,6 +56,20 @@ test('a valid blog can be added', async () => {
     expect(titles).toContain(helper.ValidBlogToAdd.title)
 })
 
+test('posting a blog without likes created with 0 likes', async () => {
+    await api
+        .post('/api/blogs')
+        .send(helper.blogToAddWithoutLikes)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const blogsAtTheEnd = await helper.blogsInDB()
+    expect(blogsAtTheEnd).toHaveLength(helper.initialBlogs.length + 1)
+
+    const createdBlog = blogsAtTheEnd.find(b => b.title === helper.blogToAddWithoutLikes.title)
+    expect(createdBlog.likes).toBe(0)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })

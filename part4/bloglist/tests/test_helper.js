@@ -17,11 +17,19 @@ const ValidBlogToAdd = {
     __v: 0
 }   
 
+const blogToAddWithoutLikes = {
+    _id: '5a422aa71b54a676234d17fd',
+    title: 'Lord of the Rings',
+    author: 'Tolkien',
+    url: 'http://www.amazon.com',
+    __v: 0
+}   
+
 const blogsInDB = async () => {
     const notes = await Blog.find({})
     return notes.map(note => note.toJSON())
 }
   
 module.exports = {
-    initialBlogs, ValidBlogToAdd, blogsInDB
+    initialBlogs, ValidBlogToAdd, blogsInDB, blogToAddWithoutLikes
 }

@@ -70,6 +70,14 @@ test('posting a blog without likes created with 0 likes', async () => {
     expect(createdBlog.likes).toBe(0)
 })
 
+
+test('posting a blog without title and URL fails', async () => {
+    await api
+        .post('/api/blogs')
+        .send(helper.blogToAddWithoutTitleAndUrl)
+        .expect(400)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })

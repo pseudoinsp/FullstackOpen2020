@@ -26,9 +26,23 @@ const mostBlogs = (blogs) => {
     return { 'author': blogEntriesOfAuthorWithMostBlogs[0].author, 'blogs': blogEntriesOfAuthorWithMostBlogs.length }
 }
 
+const mostLikes = (blogs) => {
+    if(blogs.length === 0) 
+        return  null
+    
+    const sumReducer = (sum, item) => sum + item        
+    const groupReducer = (groupWithMostElements, current) =>
+        groupWithMostElements.map(x => x.likes).reduce(sumReducer, 0) >=
+        current.map(x => x.likes).reduce(sumReducer, 0) ?  groupWithMostElements : current
+    const authors = lodash.groupBy(blogs, blog => blog.author)
+    let blogEntriesOfAuthorWithMostBlogs = lodash.reduce(authors, groupReducer)
+    return { 'author': blogEntriesOfAuthorWithMostBlogs[0].author, 'likes': blogEntriesOfAuthorWithMostBlogs.map(x => x.likes).reduce(sumReducer, 0) }
+}
+
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
-    mostBlogs
+    mostBlogs,
+    mostLikes
 }

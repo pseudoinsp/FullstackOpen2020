@@ -38,6 +38,13 @@ test('correct number of blogs are returned', async () => {
     expect(titles).toContain('React patterns')
 })
 
+test('returned blogs has id property', async () => {
+    const response = await api.get('/api/blogs')
+
+    const ids = response.body.map(r => r.id)
+    ids.forEach(id => expect(id).toBeDefined())
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })

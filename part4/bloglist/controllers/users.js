@@ -13,9 +13,15 @@ usersRouter.get('/', async (request, response, next) => {
 })
 
 usersRouter.post('/', async (request, response, next) => {
+
+    const sentPassword = request.body.password
+    if(!sentPassword || sentPassword.length <= 3) {
+        return response.status(400).json({'error': 'password not provided, or less than 3 characters'})
+    }
+
     try
     {
-        const passwordHash = await bcrypt.hash(request.body.password, 10)
+        const passwordHash = await bcrypt.hash(sentPassword, 10)
         const user = new User({
             username: request.body.username,
             name: request.body.name,

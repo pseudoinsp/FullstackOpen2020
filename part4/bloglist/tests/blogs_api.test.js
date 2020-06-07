@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
-const helper = require('./test_helper')
+const helper = require('./blog_test_helper')
 const api = supertest(app)
 
 beforeEach(async () => {

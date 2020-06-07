@@ -81,6 +81,7 @@ describe('adding a user', () => {
     )
 })
 
+// TODO why no await is necessary?
 afterAll(() => {
     mongoose.connection.close()
 })

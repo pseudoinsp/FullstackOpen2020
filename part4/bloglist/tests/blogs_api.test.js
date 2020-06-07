@@ -3,9 +3,13 @@ const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
 const helper = require('./blog_test_helper')
+const userHelper = require('./user_test_helper')
 const api = supertest(app)
 
 beforeEach(async () => {
+ 
+    // TODO why does user delete and add breaks this?
+
     await Blog.deleteMany({})
 
     for (let note of helper.initialBlogs) {
@@ -43,8 +47,10 @@ test('returned blogs has id property', async () => {
 })
 
 test('a valid blog can be added', async () => {
+
     await api
         .post('/api/blogs')
+        .set('authorization', `Bearer ${userHelper.bearerTokenForFirstUser()}`)
         .send(helper.ValidBlogToAdd)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -59,6 +65,7 @@ test('a valid blog can be added', async () => {
 test('posting a blog without likes created with 0 likes', async () => {
     await api
         .post('/api/blogs')
+        .set('authorization', `Bearer ${userHelper.bearerTokenForFirstUser()}`)
         .send(helper.blogToAddWithoutLikes)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -74,8 +81,16 @@ test('posting a blog without likes created with 0 likes', async () => {
 test('posting a blog without title and URL fails', async () => {
     await api
         .post('/api/blogs')
+        .set('authorization', `Bearer ${userHelper.bearerTokenForFirstUser()}`)
         .send(helper.blogToAddWithoutTitleAndUrl)
         .expect(400)
+})
+
+test('posting a blog without authentication token fails', async () => {
+    await api
+        .post('/api/blogs')
+        .send(helper.blogToAddWithoutTitleAndUrl)
+        .expect(401)
 })
 
 test('a blog can be deleted', async () => {
@@ -84,6 +99,7 @@ test('a blog can be deleted', async () => {
 
     await api
         .delete(`/api/blogs/${blogToDelete.id}`)
+        .set('authorization', `Bearer ${userHelper.bearerTokenForFirstUser()}`)
         .expect(204)
 
     const blogsAtTheEnd = await helper.blogsInDB()

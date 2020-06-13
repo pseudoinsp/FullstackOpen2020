@@ -2,15 +2,19 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('') 
 
   const [password, setPassword] = useState('')
-  const [newBlog, setNewBlog] = useState({title: '', 'author': '', url:''}) 
+  const [newBlog, setNewBlog] = useState({title: '', author: '', url:''}) 
 
   const [user, setUser] = useState(null) 
+
+  const [notificationMessage, setNotificationMessage] = useState(null)
+  const [notificationMessageColor, setNotificationColor] = useState('green')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -38,17 +42,19 @@ const App = () => {
       blogService.setToken(receivedUser.token)
       setUsername('')
       setPassword('')
+      notifyUser(`Successful login with user ${receivedUser.name}`, 'green')
       console.log('successful login')
     }
     catch(exception) {
+      notifyUser(`Unsuccessful login: ${exception}`, 'red')
       console.log('unsuccessful login')
     }
   }
 
   const handleLogout = event => {
-     event.preventDefault()
      console.log('logout called')
      blogService.setToken(null) 
+     notifyUser(`Logged out from user ${user.name}`, 'green')
      window.localStorage.removeItem('loggedBlogappUser')
      setUser(null)
   }
@@ -61,13 +67,23 @@ const App = () => {
       await blogService.create(newBlog)
     }
     catch (exception) {
+      notifyUser(`Blog was not added: ${exception}`, 'red')
       console.log('error during new blog addition')
     }
+  }
+
+  const notifyUser = (message, color) => {
+    setNotificationColor(color)
+    setNotificationMessage(message)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 5000)
   }
 
   if(user === null) {
     return (
       <div>
+        <Notification message={notificationMessage} color={notificationMessageColor} />
         <h2>Log in to application</h2>
         <form onSubmit={handleLogin}>
             <div>
@@ -97,6 +113,7 @@ const App = () => {
   return (
     <>
       <div>
+        <Notification message={notificationMessage} color={notificationMessageColor} />
           <h2>Create new</h2>
           <form onSubmit={handleAddNewBlog}>
               <div>

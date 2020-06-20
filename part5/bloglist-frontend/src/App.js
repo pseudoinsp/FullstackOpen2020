@@ -157,7 +157,7 @@ const App = () => {
         </div>
         <div>
           <h2>blogs</h2>
-          {username} logged in 
+          {user.username} logged in 
           <button onClick={() => handleLogout()}>logout</button>
           {blogs.sort((x, y) => parseFloat(y.likes) - parseFloat(x.likes)).map(blog =>
             <Blog key={blog.id} blog={blog} incrementLike={incrementLike} removeEnabled={isRemoveEnabled} remove={deleteBlog} />

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import NewBlogForm from './components/NewBlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
@@ -115,36 +116,7 @@ const App = () => {
       <div>
         <Notification message={notificationMessage} color={notificationMessageColor} />
           <h2>Create new</h2>
-          <form onSubmit={handleAddNewBlog}>
-              <div>
-                title:
-                  <input
-                  type="text"
-                  value={newBlog.title}
-                  name="NewTitle"
-                  onChange={({ target }) => { let b = {...newBlog}; b.title = target.value; setNewBlog(b) }}
-                />
-              </div>
-              <div>
-                author:
-                  <input
-                  type="text"
-                  value={newBlog.author}
-                  name="NewUrl"
-                  onChange={({ target }) => { let b = {...newBlog}; b.author = target.value; setNewBlog(b) }}
-                />
-              </div>
-              <div>
-                url:
-                  <input
-                  type="text"
-                  value={newBlog.url}
-                  name="NewTitle"
-                  onChange={({ target }) => { let b = {...newBlog}; b.url = target.value; setNewBlog(b) }}
-                />
-              </div>
-              <button type="submit">create</button>
-            </form>
+           <NewBlogForm newBlogDMO={newBlog} setNewBlogDMO={setNewBlog} handleAddNewBlog={handleAddNewBlog} />
         </div>
         <div>
           <h2>blogs</h2>

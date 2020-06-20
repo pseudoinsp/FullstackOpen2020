@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const Blog = ({ blog }) => {
+const Blog = ({ blog, incrementLike }) => {
   const [detailed, setDetailed] = useState(false) 
 
   const blogStyle = {
@@ -17,7 +17,7 @@ const Blog = ({ blog }) => {
         <br />
         {blog.url}
         <br />
-        likes {blog.likes} <button>like</button>
+        likes {blog.likes} <button onClick={() => incrementLike(blog)}>like</button>
         <br />
         {blog.author}
       </div>
@@ -25,7 +25,7 @@ const Blog = ({ blog }) => {
   }
 
   return (
-    <div blogStyle={blogStyle}>
+    <div style={blogStyle}>
       {blog.title} {blog.author} <button onClick={() => setDetailed(true)}>view</button>
     </div>
   )}

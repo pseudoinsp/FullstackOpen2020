@@ -73,6 +73,21 @@ const App = () => {
     }
   }
 
+  const incrementLike = async blogToUpdate => {
+    try {
+      const blogDTO = {...blogToUpdate}
+      blogDTO.likes++
+      await blogService.update(blogToUpdate.id, blogDTO)
+      notifyUser(`Like number increased to ${blogDTO.likes}`, 'green')
+      setBlogs(blogs.map(b => b.id !== blogToUpdate.id ? b : blogDTO))
+    }
+    catch (exception) {
+      notifyUser(`Like was not added: ${exception}`, 'red')
+      console.log('error during new blog update')
+    }
+
+  }
+
   const notifyUser = (message, color) => {
     setNotificationColor(color)
     setNotificationMessage(message)
@@ -125,7 +140,7 @@ const App = () => {
           {username} logged in 
           <button onClick={() => handleLogout()}>logout</button>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} incrementLike={incrementLike} />
           )}
         </div>
       

@@ -17,6 +17,8 @@ const App = () => {
   const [notificationMessage, setNotificationMessage] = useState(null)
   const [notificationMessageColor, setNotificationColor] = useState('green')
 
+  const newBlogFormRef = React.createRef()
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -63,6 +65,7 @@ const App = () => {
   const addNewBlog = async (newBlog) => {
     try {
       await blogService.create(newBlog)
+      newBlogFormRef.current.toggleVisibility()
     }
     catch (exception) {
       notifyUser(`Blog was not added: ${exception}`, 'red')
@@ -113,7 +116,7 @@ const App = () => {
       <div>
         <Notification message={notificationMessage} color={notificationMessageColor} />
           <h2>Create new</h2>
-          <Togglable buttonLabel='new blog'>
+          <Togglable buttonLabel='new blog' ref={newBlogFormRef} >
             <NewBlogForm createNewBlog={addNewBlog} />  
           </Togglable>
         </div>

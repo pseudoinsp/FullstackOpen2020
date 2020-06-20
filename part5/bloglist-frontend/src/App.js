@@ -64,12 +64,32 @@ const App = () => {
 
   const addNewBlog = async (newBlog) => {
     try {
-      await blogService.create(newBlog)
+      const addedBlog = await blogService.create(newBlog)
+      console.log(addedBlog)
       newBlogFormRef.current.toggleVisibility()
+      notifyUser(`Added blog with title ${addedBlog.title}`, 'green')
+      setBlogs(blogs.concat(addedBlog))
     }
     catch (exception) {
       notifyUser(`Blog was not added: ${exception}`, 'red')
       console.log('error during new blog addition')
+    }
+  }
+
+  const isRemoveEnabled = (blog) => {
+    return user.username === blog.user.username
+  }
+
+  const deleteBlog = async blogToDelete => {
+    if(window.confirm(`Are you sure you want to remove blog ${blogToDelete.title} by ${blogToDelete.author}?`)) {
+      try {
+        await blogService.deleteBlog(blogToDelete.id)
+        notifyUser(`Removed blog with title ${blogToDelete.title}`, 'green')
+        setBlogs(blogs.filter(b => b.id !== blogToDelete.id))
+      }
+      catch (exception) {
+        notifyUser(`Blog was not deleted: ${exception}`, 'red')
+      }
     }
   }
 
@@ -140,10 +160,9 @@ const App = () => {
           {username} logged in 
           <button onClick={() => handleLogout()}>logout</button>
           {blogs.sort((x, y) => parseFloat(y.likes) - parseFloat(x.likes)).map(blog =>
-            <Blog key={blog.id} blog={blog} incrementLike={incrementLike} />
+            <Blog key={blog.id} blog={blog} incrementLike={incrementLike} removeEnabled={isRemoveEnabled} remove={deleteBlog} />
           )}
         </div>
-      
     </>
   )
 }

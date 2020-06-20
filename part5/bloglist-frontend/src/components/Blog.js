@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const Blog = ({ blog, incrementLike }) => {
+const Blog = ({ blog, incrementLike, removeEnabled, remove }) => {
   const [detailed, setDetailed] = useState(false) 
 
   const blogStyle = {
@@ -9,6 +9,8 @@ const Blog = ({ blog, incrementLike }) => {
     borderWidth: 1,
     marginBottom: 5
   }
+
+  const showWhenEnabled = { display: removeEnabled(blog) ? '' : 'none' }
 
   if(detailed) {
     return (
@@ -20,6 +22,8 @@ const Blog = ({ blog, incrementLike }) => {
         likes {blog.likes} <button onClick={() => incrementLike(blog)}>like</button>
         <br />
         {blog.author}
+        <br />
+        <button style={showWhenEnabled} onClick={() => remove(blog)}>remove</button>
       </div>
     )
   }

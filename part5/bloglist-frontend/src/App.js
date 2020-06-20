@@ -10,8 +10,7 @@ const App = () => {
   const [username, setUsername] = useState('') 
 
   const [password, setPassword] = useState('')
-  const [newBlog, setNewBlog] = useState({title: '', author: '', url:''}) 
-
+  
   const [user, setUser] = useState(null) 
 
   const [notificationMessage, setNotificationMessage] = useState(null)
@@ -60,10 +59,7 @@ const App = () => {
      setUser(null)
   }
 
-  const handleAddNewBlog = async event => {
-    event.preventDefault()
-    console.log(`add new blog: ${JSON.stringify(newBlog)}`)
-
+  const addNewBlog = async (newBlog) => {
     try {
       await blogService.create(newBlog)
     }
@@ -116,7 +112,7 @@ const App = () => {
       <div>
         <Notification message={notificationMessage} color={notificationMessageColor} />
           <h2>Create new</h2>
-           <NewBlogForm newBlogDMO={newBlog} setNewBlogDMO={setNewBlog} handleAddNewBlog={handleAddNewBlog} />
+           <NewBlogForm createNewBlog={addNewBlog} />
         </div>
         <div>
           <h2>blogs</h2>

@@ -1,33 +1,42 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-const NewBlogForm = ({newBlogDMO, setNewBlogDMO, handleAddNewBlog}) => {
+const NewBlogForm = ({createNewBlog}) => {
+
+    const [newBlog, setNewBlog] = useState({title: '', author: '', url:''}) 
+
+    const handleAddNewBlog = async event => {
+        event.preventDefault()
+        await createNewBlog(newBlog)
+        setNewBlog({title: '', author: '', url:''})
+    }
+
     return (
     <form onSubmit={handleAddNewBlog}>
     <div>
       title:
         <input
         type="text"
-        value={newBlogDMO.title}
+        value={newBlog.title}
         name="NewTitle"
-        onChange={({ target }) => { let b = {...newBlogDMO}; b.title = target.value; setNewBlogDMO(b) }}
+        onChange={({ target }) => { let b = {...newBlog}; b.title = target.value; setNewBlog(b) }}
       />
     </div>
     <div>
       author:
         <input
         type="text"
-        value={newBlogDMO.author}
-        name="NewUrl"
-        onChange={({ target }) => { let b = {...newBlogDMO}; b.author = target.value; setNewBlogDMO(b) }}
+        value={newBlog.author}
+        name="NewAuthor"
+        onChange={({ target }) => { let b = {...newBlog}; b.author = target.value; setNewBlog(b) }}
       />
     </div>
     <div>
       url:
         <input
         type="text"
-        value={newBlogDMO.url}
-        name="NewTitle"
-        onChange={({ target }) => { let b = {...newBlogDMO}; b.url = target.value; setNewBlogDMO(b) }}
+        value={newBlog.url}
+        name="NewUrl"
+        onChange={({ target }) => { let b = {...newBlog}; b.url = target.value; setNewBlog(b) }}
       />
     </div>
     <button type="submit">create</button>

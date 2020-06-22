@@ -18,6 +18,7 @@ const NewBlogForm = ({ createNewBlog }) => {
                     type="text"
                     value={newBlog.title}
                     name="NewTitle"
+                    id="title"
                     onChange={({ target }) => { let b = { ...newBlog }; b.title = target.value; setNewBlog(b) }}
                 />
             </div>
@@ -27,6 +28,7 @@ const NewBlogForm = ({ createNewBlog }) => {
                     type="text"
                     value={newBlog.author}
                     name="NewAuthor"
+                    id="author"
                     onChange={({ target }) => { let b = { ...newBlog }; b.author = target.value; setNewBlog(b) }}
                 />
             </div>
@@ -36,6 +38,7 @@ const NewBlogForm = ({ createNewBlog }) => {
                     type="text"
                     value={newBlog.url}
                     name="NewUrl"
+                    id="url"
                     onChange={({ target }) => { let b = { ...newBlog }; b.url = target.value; setNewBlog(b) }}
                 />
             </div>

@@ -12,7 +12,27 @@ describe('Note app', function() {
     })
 
 
-    it('login is available', function() {
-      cy.contains('Log in to application')
+    it('login from is shown', function() {
+        cy.contains('Log in to application')
     })
+
+    describe('Login',function() {
+        it('succeeds with correct credentials', function() {
+            cy.get('#username').type('testelek')
+            cy.get('#password').type('helloka')
+            cy.get('#login-button').click()
+        
+            cy.contains('logged in')
+        })
+    
+        it.only('fails with wrong credentials', function() {
+            cy.get('#username').type('testelek')
+            cy.get('#password').type('alma123')
+            cy.get('#login-button').click()
+        
+            cy.get('.error')
+                .contains('Unsuccessful login')
+                .and('have.css', 'color', 'rgb(255, 0, 0)')
+        })
+      })
   })              

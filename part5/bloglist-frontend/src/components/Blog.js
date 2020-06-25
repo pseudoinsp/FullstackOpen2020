@@ -21,7 +21,7 @@ const Blog = ({ blog, incrementLike, removeEnabled, remove }) => {
                 <br />
                 {blog.url}
                 <br />
-                likes {blog.likes} <button onClick={() => incrementLike(blog)}>like</button>
+                likes {blog.likes} <button id="like-button" onClick={() => incrementLike(blog)}>like</button>
                 <br />
                 {blog.author}
                 <br />

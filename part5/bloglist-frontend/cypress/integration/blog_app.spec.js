@@ -36,7 +36,7 @@ describe('Blog app', function() {
         })
       })
 
-      describe.only('When logged in', function() {
+      describe('When logged in', function() {
         beforeEach(function() {
             cy.get('#username').type('testelek')
             cy.get('#password').type('helloka')
@@ -55,6 +55,26 @@ describe('Blog app', function() {
             cy.contains('create').click()
 
             cy.contains('testAuthor')
+        })
+
+        describe('and a blog exists', function () {
+            beforeEach(function () {
+                cy.contains('new blog').click()
+
+                cy.get('#title').type('testTitle')
+                cy.get('#author').type('testAuthor')
+                cy.get('#url').type('testUrl')
+
+                cy.contains('create').click()
+            })
+            
+            it('can be liked', function () {
+                cy.contains('view').click()
+
+                cy.get('#like-button').click()
+
+                cy.contains('Like number increased')
+            })
         })
       })
   })              

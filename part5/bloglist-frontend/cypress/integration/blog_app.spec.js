@@ -1,3 +1,5 @@
+import { isExportDeclaration } from "typescript"
+
 describe('Blog app', function() {
     beforeEach(function() {
         cy.request('POST', 'http://localhost:3001/api/testing/reset')
@@ -74,6 +76,19 @@ describe('Blog app', function() {
                 cy.get('#like-button').click()
 
                 cy.contains('Like number increased')
+            })
+
+            it.only('can be deleted', function () {
+                cy.contains('view').click()
+
+                cy.on('window:confirm', (str) => {
+                    expect(str).to.contains('want to remove')
+                    return true
+                }
+
+                cy.get('#remove-button').click()
+
+                cy.contains('testTitle').should('not.exist')
             })
         })
       })

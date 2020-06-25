@@ -25,7 +25,7 @@ const Blog = ({ blog, incrementLike, removeEnabled, remove }) => {
                 <br />
                 {blog.author}
                 <br />
-                <button style={showWhenEnabled} onClick={() => remove(blog)}>remove</button>
+                <button id='remove-button' style={showWhenEnabled} onClick={() => remove(blog)}>remove</button>
             </div>
         )
     }

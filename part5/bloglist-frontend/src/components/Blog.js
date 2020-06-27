@@ -16,7 +16,7 @@ const Blog = ({ blog, incrementLike, removeEnabled, remove }) => {
 
     if(detailed) {
         return (
-            <div style={blogStyle}>
+            <div className="blog" style={blogStyle}>
                 {blog.title} <button onClick={() => setDetailed(false)}>hide</button>
                 <br />
                 {blog.url}
@@ -31,7 +31,7 @@ const Blog = ({ blog, incrementLike, removeEnabled, remove }) => {
     }
 
     return (
-        <div style={blogStyle}>
+        <div className="blog" style={blogStyle}>
             {blog.title} {blog.author} <button onClick={() => setDetailed(true)}>view</button>
         </div>
     )}

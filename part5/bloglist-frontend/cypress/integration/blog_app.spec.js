@@ -1,5 +1,3 @@
-import { isExportDeclaration } from "typescript"
-
 describe('Blog app', function() {
     beforeEach(function() {
         cy.request('POST', 'http://localhost:3001/api/testing/reset')
@@ -84,11 +82,35 @@ describe('Blog app', function() {
                 cy.on('window:confirm', (str) => {
                     expect(str).to.contains('want to remove')
                     return true
-                }
+                })
 
                 cy.get('#remove-button').click()
 
                 cy.contains('testTitle').should('not.exist')
+            })
+        })
+
+        describe.only('and multiple blogs exist', function () {
+            beforeEach(function () {
+                cy.createBlog({ title: "BlogWithLeastLikes", author: "AA", likes: 10 })
+                cy.createBlog({ title: "BlogWithMostLikes", author: "BB", likes: 30 })
+                cy.createBlog({ title: "BlogWithMedianLikes", author: "CC", likes: 20 })
+            })
+            
+            it('all blogs are shown', function () {
+                cy.get('.blog')
+                  .should(blogs => {
+                    expect(blogs).to.have.length(3)
+                })
+            })
+
+            it('blogs are shown by like order', function () {
+                cy.get('.blog')
+                .should(blogs => {
+                    expect(blogs.eq(0)).to.contain('BlogWithMostLikes')
+                    expect(blogs.eq(1)).to.contain('BlogWithMedianLikes')
+                    expect(blogs.eq(2)).to.contain('BlogWithLeastLikes')
+                })
             })
         })
       })

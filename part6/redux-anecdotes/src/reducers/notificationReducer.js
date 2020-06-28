@@ -1,6 +1,4 @@
-const initialState = [
-    'Hey'
-]
+const initialState = null
 
 const notificationReducer = (state = initialState, action) => {
     console.log('state now: ', state)
@@ -18,6 +16,13 @@ export const setNotification = notification => {
     return {
         type: 'SET_NOTIFICATION',
         notification
+    }
+}
+
+export const removeNotification = () => {
+    return {
+        type: 'SET_NOTIFICATION',
+        notification : null
     }
 }
 

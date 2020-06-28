@@ -9,7 +9,7 @@ const AnecdoteList = props => {
     const dispatch = useDispatch()
 
     const handleVote = anecdote => {
-        dispatch(vote(anecdote.id))
+        dispatch(vote(anecdote))
         notifyUser(`You voted '${anecdote.content}'`)
     }  
 

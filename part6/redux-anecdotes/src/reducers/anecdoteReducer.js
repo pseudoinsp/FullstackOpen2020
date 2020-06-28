@@ -1,4 +1,5 @@
 import anecdoteService from '../services/anecdotes'
+import { useSelector } from 'react-redux'
 
 const anecdoteReducer = (state = [], action) => {
   console.log('state now: ', state)
@@ -24,12 +25,17 @@ const anecdoteReducer = (state = [], action) => {
   }
 }
 
-export const vote = (id) => {
-  return {
-    type: "VOTE_ANECDOTE",
-    data: {
-      id
-    }
+export const vote = anecdote => {
+  return async dispatch => {
+    const modifiedAnecdote = { ...anecdote, votes: anecdote.votes + 1 }
+    await anecdoteService.update(modifiedAnecdote)
+
+    dispatch({
+      type: "VOTE_ANECDOTE",
+      data: {
+        id: anecdote.id
+      }
+    })
   }
 }
 

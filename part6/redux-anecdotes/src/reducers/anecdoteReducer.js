@@ -1,5 +1,4 @@
 import anecdoteService from '../services/anecdotes'
-import { useSelector } from 'react-redux'
 
 const anecdoteReducer = (state = [], action) => {
   console.log('state now: ', state)

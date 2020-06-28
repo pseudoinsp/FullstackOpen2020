@@ -12,10 +12,19 @@ const notificationReducer = (state = initialState, action) => {
     }
 }
 
-export const setNotification = notification => {
-    return {
-        type: 'SET_NOTIFICATION',
-        notification
+export const setNotification = (notification, shownSec) => {
+    return async dispatch => {
+        dispatch({
+            type: 'SET_NOTIFICATION',
+            notification
+        })
+
+        await new Promise(resolve => setTimeout(resolve, shownSec * 1000))
+        
+        dispatch({
+            type: 'SET_NOTIFICATION',
+            notification : null    
+        })
     }
 }
 

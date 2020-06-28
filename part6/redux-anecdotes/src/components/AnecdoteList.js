@@ -5,6 +5,7 @@ import { setNotification, removeNotification } from '../reducers/notificationRed
 
 const AnecdoteList = props => {
     const anecdotes = useSelector(state => state.anecdotes)
+    const anecdoteFilter = useSelector(state => state.filter)
     const dispatch = useDispatch()
 
     const handleVote = anecdote => {
@@ -22,6 +23,7 @@ const AnecdoteList = props => {
     return (
         <>
             {anecdotes
+                .filter(x => x.content.toLowerCase().includes(anecdoteFilter.toLowerCase()))
                 .sort((x, y) => y.votes - x.votes)
                 .map(anecdote =>
                 <div key={anecdote.id}>

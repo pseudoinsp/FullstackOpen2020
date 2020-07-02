@@ -61,9 +61,9 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const content = useField('content')
-  const author = useField('author')
-  const info = useField('info')
+  const [content, contentReset] = useField('content')
+  const [author, authorReset] = useField('author')
+  const [info, infoReset] = useField('info')
 
   const history = useHistory()
 
@@ -79,9 +79,9 @@ const CreateNew = (props) => {
   }
 
   const handleReset = () => {
-    content.reset()
-    author.reset()
-    info.reset()
+    contentReset()
+    authorReset()
+    infoReset()
   }
 
   return (

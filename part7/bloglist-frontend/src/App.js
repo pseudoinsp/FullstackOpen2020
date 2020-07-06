@@ -5,6 +5,8 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
+import { setNotification } from './reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -14,10 +16,8 @@ const App = () => {
 
     const [user, setUser] = useState(null)
 
-    const [notificationMessage, setNotificationMessage] = useState(null)
-    const [notificationMessageColor, setNotificationColor] = useState('green')
-
     const newBlogFormRef = React.createRef()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         blogService.getAll().then(blogs =>
@@ -44,11 +44,11 @@ const App = () => {
             blogService.setToken(receivedUser.token)
             setUsername('')
             setPassword('')
-            notifyUser(`Successful login with user ${receivedUser.name}`, 'green')
+            dispatch(setNotification(`Successful login with user ${receivedUser.name}`, 'green', 3))
             console.log('successful login')
         }
         catch(exception) {
-            notifyUser(`Unsuccessful login: ${exception}`, 'red')
+            dispatch(setNotification(`Unsuccessful login: ${exception}`, 'red', 3))
             console.log('unsuccessful login')
         }
     }
@@ -56,7 +56,7 @@ const App = () => {
     const handleLogout = event => {
         console.log('logout called')
         blogService.setToken(null)
-        notifyUser(`Logged out from user ${user.name}`, 'green')
+        dispatch(setNotification(`Logged out from user ${user.name}`, 'green', 3))
         window.localStorage.removeItem('loggedBlogappUser')
         setUser(null)
     }
@@ -66,11 +66,11 @@ const App = () => {
             const addedBlog = await blogService.create(newBlog)
             console.log(addedBlog)
             newBlogFormRef.current.toggleVisibility()
-            notifyUser(`Added blog with title ${addedBlog.title}`, 'green')
+            dispatch(setNotification(`Added blog with title ${addedBlog.title}`, 'green', 3))
             setBlogs(blogs.concat(addedBlog))
         }
         catch (exception) {
-            notifyUser(`Blog was not added: ${exception}`, 'red')
+            dispatch(setNotification(`Blog was not added: ${exception}`, 'red', 3))
             console.log('error during new blog addition')
         }
     }
@@ -83,11 +83,11 @@ const App = () => {
         if(window.confirm(`Are you sure you want to remove blog ${blogToDelete.title} by ${blogToDelete.author}?`)) {
             try {
                 await blogService.deleteBlog(blogToDelete.id)
-                notifyUser(`Removed blog with title ${blogToDelete.title}`, 'green')
+                dispatch(setNotification(`Removed blog with title ${blogToDelete.title}`, 'green', 3))
                 setBlogs(blogs.filter(b => b.id !== blogToDelete.id))
             }
             catch (exception) {
-                notifyUser(`Blog was not deleted: ${exception}`, 'red')
+                dispatch(setNotification(`Blog was not deleted: ${exception}`, 'red', 3))
             }
         }
     }
@@ -97,27 +97,19 @@ const App = () => {
             const blogDTO = { ...blogToUpdate }
             blogDTO.likes++
             await blogService.update(blogToUpdate.id, blogDTO)
-            notifyUser(`Like number increased to ${blogDTO.likes}`, 'green')
+            dispatch(setNotification(`Like number increased to ${blogDTO.likes}`, 'green', 3))
             setBlogs(blogs.map(b => b.id !== blogToUpdate.id ? b : blogDTO))
         }
         catch (exception) {
-            notifyUser(`Like was not added: ${exception}`, 'red')
+            dispatch(setNotification(`Like was not added: ${exception}`, 'red', 3))
             console.log('error during new blog update')
         }
-    }
-
-    const notifyUser = (message, color) => {
-        setNotificationColor(color)
-        setNotificationMessage(message)
-        setTimeout(() => {
-            setNotificationMessage(null)
-        }, 5000)
     }
 
     if(user === null) {
         return (
             <div>
-                <Notification message={notificationMessage} color={notificationMessageColor} />
+                <Notification />
                 <h2>Log in to application</h2>
                 <form onSubmit={handleLogin}>
                     <div>
@@ -149,7 +141,7 @@ const App = () => {
     return (
         <>
             <div>
-                <Notification message={notificationMessage} color={notificationMessageColor} />
+                <Notification />
                 <h2>Create new</h2>
                 <Togglable buttonLabel='new blog' ref={newBlogFormRef} >
                     <NewBlogForm createNewBlog={addNewBlog} />

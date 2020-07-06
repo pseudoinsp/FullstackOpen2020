@@ -6,6 +6,7 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { setNotification } from './reducers/notificationReducer'
+import { setUser } from './reducers/userReducer'
 import { initializeBlogs, createBlog ,likeBlog, deleteBlog  } from './reducers/blogReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -13,12 +14,11 @@ const App = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
-    const [user, setUser] = useState(null)
-
     const newBlogFormRef = React.createRef()
     const dispatch = useDispatch()
 
     const blogs = useSelector(state => state.blogs)
+    const user = useSelector(state => state.userinfo?.user)
 
     useEffect(() => {
         dispatch(initializeBlogs())
@@ -28,10 +28,10 @@ const App = () => {
         const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
         if (loggedUserJSON) {
             const loadedUser = JSON.parse(loggedUserJSON)
-            setUser(loadedUser)
+            dispatch(setUser(loadedUser))
             blogService.setToken(loadedUser.token)
         }
-    }, [])
+    }, [dispatch])
 
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -40,7 +40,7 @@ const App = () => {
         try {
             const receivedUser = await loginService.login({ username, password })
             window.localStorage.setItem('loggedBlogappUser', JSON.stringify(receivedUser))
-            setUser(receivedUser)
+            dispatch(setUser(receivedUser))
             blogService.setToken(receivedUser.token)
             setUsername('')
             setPassword('')
@@ -58,7 +58,7 @@ const App = () => {
         blogService.setToken(null)
         dispatch(setNotification(`Logged out from user ${user.name}`, 'green', 3))
         window.localStorage.removeItem('loggedBlogappUser')
-        setUser(null)
+        dispatch(setUser(null))
     }
 
     const addNewBlog = async (newBlog) => {
@@ -143,7 +143,7 @@ const App = () => {
             </div>
             <div>
                 <h2>blogs</h2>
-                {user.username} logged in
+                {user?.username} logged in
                 <button onClick={() => handleLogout()}>logout</button>
                 {blogs.sort((x, y) => parseFloat(y.likes) - parseFloat(x.likes)).map(blog =>
                     <Blog key={blog.id} blog={blog} incrementLike={incrementLike} removeEnabled={isRemoveEnabled} remove={handleBlogDeletion} />

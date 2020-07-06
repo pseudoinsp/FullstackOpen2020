@@ -4,11 +4,16 @@ import NewBlogForm from './components/NewBlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import Users from './components/Users'
 import Togglable from './components/Togglable'
 import { setNotification } from './reducers/notificationReducer'
 import { setUser } from './reducers/userReducer'
+import { initializeUsers } from './reducers/usersReducer'
 import { initializeBlogs, createBlog ,likeBlog, deleteBlog  } from './reducers/blogReducer'
 import { useSelector, useDispatch } from 'react-redux'
+import {
+    Switch, Route
+  } from "react-router-dom"
 
 const App = () => {
     const [username, setUsername] = useState('')
@@ -19,9 +24,11 @@ const App = () => {
 
     const blogs = useSelector(state => state.blogs)
     const user = useSelector(state => state.userinfo?.user)
+    const users = useSelector(state => state.users)
 
     useEffect(() => {
         dispatch(initializeBlogs())
+        dispatch(initializeUsers())
     }, [dispatch])
 
     useEffect(() => {
@@ -56,7 +63,7 @@ const App = () => {
     const handleLogout = event => {
         console.log('logout called')
         blogService.setToken(null)
-        dispatch(setNotification(`Logged out from user ${user.name}`, 'green', 3))
+        dispatch(setNotification(`Logged out from user ${user?.username}`, 'green', 3))
         window.localStorage.removeItem('loggedBlogappUser')
         dispatch(setUser(null))
     }
@@ -74,7 +81,7 @@ const App = () => {
     }
 
     const isRemoveEnabled = (blog) => {
-        return user.username === blog.user.username
+        return user?.username === blog.user.username
     }
 
     const handleBlogDeletion = async blogToDelete => {
@@ -99,8 +106,8 @@ const App = () => {
             console.log('error during new blog update')
         }
     }
-
-    if(user === null) {
+    
+    if(!user) {
         return (
             <div>
                 <Notification />
@@ -140,15 +147,22 @@ const App = () => {
                 <Togglable buttonLabel='new blog' ref={newBlogFormRef} >
                     <NewBlogForm createNewBlog={addNewBlog} />
                 </Togglable>
-            </div>
-            <div>
                 <h2>blogs</h2>
-                {user?.username} logged in
-                <button onClick={() => handleLogout()}>logout</button>
-                {blogs.sort((x, y) => parseFloat(y.likes) - parseFloat(x.likes)).map(blog =>
-                    <Blog key={blog.id} blog={blog} incrementLike={incrementLike} removeEnabled={isRemoveEnabled} remove={handleBlogDeletion} />
-                )}
+                        {user?.username} logged in
+                        <button onClick={() => handleLogout()}>logout</button>
             </div>
+            <Switch>
+                <Route path="/users">
+                    <Users users={users} />
+                </Route>
+                <Route path="/">
+                    <div>
+                        {blogs.sort((x, y) => parseFloat(y.likes) - parseFloat(x.likes)).map(blog =>
+                            <Blog key={blog.id} blog={blog} incrementLike={incrementLike} removeEnabled={isRemoveEnabled} remove={handleBlogDeletion} />
+                        )}
+                    </div>
+                </Route>
+            </Switch>
         </>
     )
 }

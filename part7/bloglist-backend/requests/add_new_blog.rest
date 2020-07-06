@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpbXVyIiwiaWQiOiI1ZWRjYzdjM2JhMmFkMTRlN2MxMzg5NjkiLCJpYXQiOjE1OTE1NDQyMjB9.tyjs8E9cahy8U7EiIFwqszFaDYGY8hSUy-QFSYJlQNk
+
+{
+    "title": "ABlog",
+    "author": "Jimmy",
+    "url": "http://www.bestblog.com",
+    "likes": 30
+}

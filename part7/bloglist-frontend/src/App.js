@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import DetailedBlog from './components/DetailedBlog'
 import NewBlogForm from './components/NewBlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -13,7 +14,7 @@ import { initializeUsers } from './reducers/usersReducer'
 import { initializeBlogs, createBlog ,likeBlog, deleteBlog  } from './reducers/blogReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import {
-    Switch, Route, useRouteMatch
+    Switch, Route, useRouteMatch, useHistory    
   } from "react-router-dom"
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
 
     const newBlogFormRef = React.createRef()
     const dispatch = useDispatch()
+    const history = useHistory()
 
     const blogs = useSelector(state => state.blogs)
     const user = useSelector(state => state.userinfo?.user)
@@ -82,7 +84,7 @@ const App = () => {
     }
 
     const isRemoveEnabled = (blog) => {
-        return user?.username === blog.user.username
+        return user?.username === blog?.user.username
     }
 
     const handleBlogDeletion = async blogToDelete => {
@@ -90,6 +92,7 @@ const App = () => {
             try {
                 dispatch((deleteBlog(blogToDelete)))
                 dispatch(setNotification(`Removed blog with title ${blogToDelete.title}`, 'green', 3))
+                history.push('/blogs')
             }
             catch (exception) {
                 dispatch(setNotification(`Blog was not deleted: ${exception}`, 'red', 3))
@@ -108,9 +111,14 @@ const App = () => {
         }
     }
 
-    const match = useRouteMatch('/users/:id')
-    const queriedUser = match 
-    ? users.find(a => a.id === (match.params.id))
+    const usersMatch = useRouteMatch('/users/:id')
+    const queriedUser = usersMatch 
+    ? users.find(a => a.id === (usersMatch.params.id))
+    : null
+
+    const blogsMatch = useRouteMatch('/blogs/:id')
+    const queriedBlog = blogsMatch 
+    ? blogs.find(a => a.id === (blogsMatch.params.id))
     : null
 
     if(!user) {
@@ -164,10 +172,13 @@ const App = () => {
                 <Route path="/users">
                     <Users users={users} />
                 </Route>
+                <Route path="/blogs/:id">
+                    <DetailedBlog blog = {queriedBlog} incrementLike={incrementLike} removeEnabled={isRemoveEnabled} remove={handleBlogDeletion} />
+                </Route>
                 <Route path="/">
                     <div>
                         {blogs.sort((x, y) => parseFloat(y.likes) - parseFloat(x.likes)).map(blog =>
-                            <Blog key={blog.id} blog={blog} incrementLike={incrementLike} removeEnabled={isRemoveEnabled} remove={handleBlogDeletion} />
+                            <Blog key={blog.id} blog={blog} />
                         )}
                     </div>
                 </Route>

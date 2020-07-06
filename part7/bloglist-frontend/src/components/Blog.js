@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from "react-router-dom"
 
-const Blog = ({ blog, incrementLike, removeEnabled, remove }) => {
-    const [detailed, setDetailed] = useState(false)
+const Blog = ({ blog }) => {
 
     const blogStyle = {
         paddingTop: 10,
@@ -12,35 +12,14 @@ const Blog = ({ blog, incrementLike, removeEnabled, remove }) => {
         marginBottom: 5
     }
 
-    const showWhenEnabled = { display: removeEnabled(blog) ? '' : 'none' }
-
-    if(detailed) {
-        return (
-            <div className="blog" style={blogStyle}>
-                {blog.title} <button onClick={() => setDetailed(false)}>hide</button>
-                <br />
-                {blog.url}
-                <br />
-                likes {blog.likes} <button id="like-button" onClick={() => incrementLike(blog)}>like</button>
-                <br />
-                {blog.author}
-                <br />
-                <button id='remove-button' style={showWhenEnabled} onClick={() => remove(blog)}>remove</button>
-            </div>
-        )
-    }
-
     return (
         <div className="blog" style={blogStyle}>
-            {blog.title} {blog.author} <button onClick={() => setDetailed(true)}>view</button>
+            <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
         </div>
     )}
 
-Blog.propTypes = {
-    blog: PropTypes.any.isRequired,
-    incrementLike: PropTypes.func.isRequired,
-    removeEnabled: PropTypes.func.isRequired,
-    remove: PropTypes.func.isRequired
+    Blog.propTypes = {
+        blog: PropTypes.any.isRequired
 }
 
 export default Blog

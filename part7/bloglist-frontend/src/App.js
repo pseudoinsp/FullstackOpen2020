@@ -6,12 +6,11 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { setNotification } from './reducers/notificationReducer'
-import { useDispatch } from 'react-redux'
+import { initializeBlogs, createBlog  } from './reducers/blogReducer'
+import { useSelector, useDispatch } from 'react-redux'
 
 const App = () => {
-    const [blogs, setBlogs] = useState([])
     const [username, setUsername] = useState('')
-
     const [password, setPassword] = useState('')
 
     const [user, setUser] = useState(null)
@@ -19,10 +18,11 @@ const App = () => {
     const newBlogFormRef = React.createRef()
     const dispatch = useDispatch()
 
+    const blogs = useSelector(state => state.blogs)
+
     useEffect(() => {
-        blogService.getAll().then(blogs =>
-            setBlogs(blogs))
-    }, [])
+        dispatch(initializeBlogs())
+    }, [dispatch])
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -63,11 +63,9 @@ const App = () => {
 
     const addNewBlog = async (newBlog) => {
         try {
-            const addedBlog = await blogService.create(newBlog)
-            console.log(addedBlog)
+            dispatch(createBlog(newBlog))
             newBlogFormRef.current.toggleVisibility()
-            dispatch(setNotification(`Added blog with title ${addedBlog.title}`, 'green', 3))
-            setBlogs(blogs.concat(addedBlog))
+            dispatch(setNotification(`Added blog with title ${newBlog.title}`, 'green', 3))
         }
         catch (exception) {
             dispatch(setNotification(`Blog was not added: ${exception}`, 'red', 3))
@@ -82,27 +80,27 @@ const App = () => {
     const deleteBlog = async blogToDelete => {
         if(window.confirm(`Are you sure you want to remove blog ${blogToDelete.title} by ${blogToDelete.author}?`)) {
             try {
-                await blogService.deleteBlog(blogToDelete.id)
+                // await blogService.deleteBlog(blogToDelete.id)
                 dispatch(setNotification(`Removed blog with title ${blogToDelete.title}`, 'green', 3))
-                setBlogs(blogs.filter(b => b.id !== blogToDelete.id))
+                // setBlogs(blogs.filter(b => b.id !== blogToDelete.id))
             }
             catch (exception) {
-                dispatch(setNotification(`Blog was not deleted: ${exception}`, 'red', 3))
+                // dispatch(setNotification(`Blog was not deleted: ${exception}`, 'red', 3))
             }
         }
     }
 
     const incrementLike = async blogToUpdate => {
         try {
-            const blogDTO = { ...blogToUpdate }
-            blogDTO.likes++
-            await blogService.update(blogToUpdate.id, blogDTO)
-            dispatch(setNotification(`Like number increased to ${blogDTO.likes}`, 'green', 3))
-            setBlogs(blogs.map(b => b.id !== blogToUpdate.id ? b : blogDTO))
+            // const blogDTO = { ...blogToUpdate }
+            // blogDTO.likes++
+            // await blogService.update(blogToUpdate.id, blogDTO)
+            // dispatch(setNotification(`Like number increased to ${blogDTO.likes}`, 'green', 3))
+            // setBlogs(blogs.map(b => b.id !== blogToUpdate.id ? b : blogDTO))
         }
         catch (exception) {
-            dispatch(setNotification(`Like was not added: ${exception}`, 'red', 3))
-            console.log('error during new blog update')
+            // dispatch(setNotification(`Like was not added: ${exception}`, 'red', 3))
+            // console.log('error during new blog update')
         }
     }
 

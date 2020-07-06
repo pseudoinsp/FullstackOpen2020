@@ -5,6 +5,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import Users from './components/Users'
+import User from './components/User'
 import Togglable from './components/Togglable'
 import { setNotification } from './reducers/notificationReducer'
 import { setUser } from './reducers/userReducer'
@@ -12,7 +13,7 @@ import { initializeUsers } from './reducers/usersReducer'
 import { initializeBlogs, createBlog ,likeBlog, deleteBlog  } from './reducers/blogReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import {
-    Switch, Route
+    Switch, Route, useRouteMatch
   } from "react-router-dom"
 
 const App = () => {
@@ -106,7 +107,12 @@ const App = () => {
             console.log('error during new blog update')
         }
     }
-    
+
+    const match = useRouteMatch('/users/:id')
+    const queriedUser = match 
+    ? users.find(a => a.id === (match.params.id))
+    : null
+
     if(!user) {
         return (
             <div>
@@ -152,6 +158,9 @@ const App = () => {
                         <button onClick={() => handleLogout()}>logout</button>
             </div>
             <Switch>
+                <Route path="/users/:id">
+                    <User user={queriedUser} />
+                </Route>
                 <Route path="/users">
                     <Users users={users} />
                 </Route>

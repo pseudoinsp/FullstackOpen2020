@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from "react-router-dom"
 
 const Users = ({users}) => {
     console.log(users)
@@ -14,7 +15,7 @@ const Users = ({users}) => {
                 </tr>
                 {users.map(u => 
                     <tr key={u.id}>
-                        <td>{u.username}</td>
+                        <td><Link to={`/users/${u.id}`}>{u.username}</Link></td>
                         <td>{u.blogs.length}</td>
                     </tr> 
                 )}

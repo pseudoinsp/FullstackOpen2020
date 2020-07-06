@@ -6,7 +6,7 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, createBlog ,likeBlog  } from './reducers/blogReducer'
+import { initializeBlogs, createBlog ,likeBlog, deleteBlog  } from './reducers/blogReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
 const App = () => {
@@ -77,15 +77,14 @@ const App = () => {
         return user.username === blog.user.username
     }
 
-    const deleteBlog = async blogToDelete => {
+    const handleBlogDeletion = async blogToDelete => {
         if(window.confirm(`Are you sure you want to remove blog ${blogToDelete.title} by ${blogToDelete.author}?`)) {
             try {
-                // await blogService.deleteBlog(blogToDelete.id)
+                dispatch((deleteBlog(blogToDelete)))
                 dispatch(setNotification(`Removed blog with title ${blogToDelete.title}`, 'green', 3))
-                // setBlogs(blogs.filter(b => b.id !== blogToDelete.id))
             }
             catch (exception) {
-                // dispatch(setNotification(`Blog was not deleted: ${exception}`, 'red', 3))
+                dispatch(setNotification(`Blog was not deleted: ${exception}`, 'red', 3))
             }
         }
     }
@@ -147,7 +146,7 @@ const App = () => {
                 {user.username} logged in
                 <button onClick={() => handleLogout()}>logout</button>
                 {blogs.sort((x, y) => parseFloat(y.likes) - parseFloat(x.likes)).map(blog =>
-                    <Blog key={blog.id} blog={blog} incrementLike={incrementLike} removeEnabled={isRemoveEnabled} remove={deleteBlog} />
+                    <Blog key={blog.id} blog={blog} incrementLike={incrementLike} removeEnabled={isRemoveEnabled} remove={handleBlogDeletion} />
                 )}
             </div>
         </>

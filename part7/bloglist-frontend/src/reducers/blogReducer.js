@@ -12,11 +12,14 @@ const blogReducer = (state = [], action) => {
         ...votedBlog, 
         likes: votedBlog.likes + 1 
       }
-      return state.map(anecdote =>
-        anecdote.id !== id ? anecdote : changedBlog 
+      return state.map(blog =>
+        blog.id !== id ? blog : changedBlog 
       )
     case 'CREATE_BLOG':
       return [...state, action.data]
+    case 'DELETE_BLOG':
+      const id2 = action.data.id
+      return state.filter(blog => blog.id !== id2)
     case 'INIT_BLOGS':
       return action.data
     default:
@@ -47,6 +50,18 @@ export const createBlog = blog => {
     })
   }
 }
+
+export const deleteBlog = blog => {
+    return async dispatch => {
+      await blogService.deleteBlog(blog.id)
+      dispatch({
+        type: "DELETE_BLOG",
+        data: {
+            id: blog.id
+        }
+      })
+    }
+  }
 
 export const initializeBlogs = () => {
   return async dispatch => {

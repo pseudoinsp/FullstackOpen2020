@@ -5,16 +5,16 @@ const blogReducer = (state = [], action) => {
   console.log('action', action)
 
   switch(action.type) {
-    // case 'VOTE_ANECDOTE':
-    //   const id = action.data.id
-    //   const votedAnecdote = state.find(n => n.id === id)
-    //   const changedAnecdote = { 
-    //     ...votedAnecdote, 
-    //     votes: votedAnecdote.votes + 1 
-    //   }
-    //   return state.map(anecdote =>
-    //     anecdote.id !== id ? anecdote : changedAnecdote 
-    //   )
+    case 'LIKE_BLOG':
+      const id = action.data.id
+      const votedBlog = state.find(n => n.id === id)
+      const changedBlog = { 
+        ...votedBlog, 
+        likes: votedBlog.likes + 1 
+      }
+      return state.map(anecdote =>
+        anecdote.id !== id ? anecdote : changedBlog 
+      )
     case 'CREATE_BLOG':
       return [...state, action.data]
     case 'INIT_BLOGS':
@@ -24,19 +24,19 @@ const blogReducer = (state = [], action) => {
   }
 }
 
-// export const vote = anecdote => {
-//   return async dispatch => {
-//     const modifiedAnecdote = { ...anecdote, votes: anecdote.votes + 1 }
-//     await anecdoteService.update(modifiedAnecdote)
+export const likeBlog = blog => {
+  return async dispatch => {
+    const modifiedBlog = { ...blog, likes: blog.likes + 1 }
+    await blogService.update(modifiedBlog.id, modifiedBlog)
 
-//     dispatch({
-//       type: "VOTE_ANECDOTE",
-//       data: {
-//         id: anecdote.id
-//       }
-//     })
-//   }
-// }
+    dispatch({
+      type: "LIKE_BLOG",
+      data: {
+        id: blog.id
+      }
+    })
+  }
+}
 
 export const createBlog = blog => {
   return async dispatch => {

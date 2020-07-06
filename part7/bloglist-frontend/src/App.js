@@ -6,7 +6,7 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, createBlog  } from './reducers/blogReducer'
+import { initializeBlogs, createBlog ,likeBlog  } from './reducers/blogReducer'
 import { useSelector, useDispatch } from 'react-redux'
 
 const App = () => {
@@ -92,15 +92,12 @@ const App = () => {
 
     const incrementLike = async blogToUpdate => {
         try {
-            // const blogDTO = { ...blogToUpdate }
-            // blogDTO.likes++
-            // await blogService.update(blogToUpdate.id, blogDTO)
-            // dispatch(setNotification(`Like number increased to ${blogDTO.likes}`, 'green', 3))
-            // setBlogs(blogs.map(b => b.id !== blogToUpdate.id ? b : blogDTO))
+            dispatch(likeBlog(blogToUpdate))
+            dispatch(setNotification(`Like number increased to ${blogToUpdate.likes + 1}`, 'green', 3))
         }
         catch (exception) {
-            // dispatch(setNotification(`Like was not added: ${exception}`, 'red', 3))
-            // console.log('error during new blog update')
+            dispatch(setNotification(`Like was not added: ${exception}`, 'red', 3))
+            console.log('error during new blog update')
         }
     }
 

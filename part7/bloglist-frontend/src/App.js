@@ -12,7 +12,7 @@ import Togglable from './components/Togglable'
 import { setNotification } from './reducers/notificationReducer'
 import { setUser } from './reducers/userReducer'
 import { initializeUsers } from './reducers/usersReducer'
-import { initializeBlogs, createBlog ,likeBlog, deleteBlog  } from './reducers/blogReducer'
+import { initializeBlogs, createBlog ,likeBlog, deleteBlog, addComment  } from './reducers/blogReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import {
     Switch, Route, useRouteMatch, useHistory    
@@ -101,6 +101,17 @@ const App = () => {
         }
     }
 
+    const handleAddComment = async (blogToAddTo, comment) => {
+        try {
+            dispatch(addComment(blogToAddTo, comment))
+            dispatch(setNotification(`Comment added to ${blogToAddTo.title}`, 'green', 3))
+        }
+        catch (exception) {
+            dispatch(setNotification(`Comment was not added: ${exception}`, 'red', 3))
+            console.log('error during new blog comment')
+        }
+    }
+
     const incrementLike = async blogToUpdate => {
         try {
             dispatch(likeBlog(blogToUpdate))
@@ -172,7 +183,7 @@ const App = () => {
                     <Users users={users} />
                 </Route>
                 <Route path="/blogs/:id">
-                    <DetailedBlog blog = {queriedBlog} incrementLike={incrementLike} removeEnabled={isRemoveEnabled} remove={handleBlogDeletion} />
+                    <DetailedBlog blog = {queriedBlog} incrementLike={incrementLike} handleAddComment={handleAddComment} removeEnabled={isRemoveEnabled} remove={handleBlogDeletion} />
                 </Route>
                 <Route path="/">
                     <div>

@@ -1,11 +1,16 @@
 import React from 'react'
+import AddComment from './AddComment'
 
-const DetailedBlog = ({ blog, incrementLike, removeEnabled, remove }) => {
+const DetailedBlog = ({ blog, incrementLike, handleAddComment, removeEnabled, remove }) => {
 
     const showWhenEnabled = { display: removeEnabled(blog) ? '' : 'none' }
 
     if(!blog)
         return null
+
+    const onSubmit = newComment => {
+        handleAddComment(blog, newComment)
+    }
 
     return (
         <div>
@@ -18,6 +23,7 @@ const DetailedBlog = ({ blog, incrementLike, removeEnabled, remove }) => {
             {blog.author}
             <br />
             <h2>comments</h2>
+            <AddComment onSubmit={onSubmit} />
             <ul>
                 {blog.comments.map(c => <li key={c}>{c}</li>)}
             </ul>

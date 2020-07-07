@@ -32,7 +32,7 @@ const NewBlogForm = ({ createNewBlog }) => {
                         name="NewUrl"
                         id="url"
                         onChange={({ target }) => { let b = { ...newBlog }; b.url = target.value; setNewBlog(b) }}/>
-                <Button variant="primary" type="submit">create</Button>
+                <Button variant="outline-primary" type="submit">create</Button>
             </Form.Group>
         </Form>
     )

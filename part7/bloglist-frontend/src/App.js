@@ -17,7 +17,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
     Switch, Route, useRouteMatch, useHistory    
   } from "react-router-dom"
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button, ListGroup, ListGroupItem } from 'react-bootstrap'
 
 const App = () => {
     const [username, setUsername] = useState('')
@@ -182,9 +182,12 @@ const App = () => {
                 </Route>
                 <Route path="/">
                     <div>
+                        <ListGroup variant="flush">
                         {blogs.sort((x, y) => parseFloat(y.likes) - parseFloat(x.likes)).map(blog =>
-                            <Blog key={blog.id} blog={blog} />
-                        )}
+                            <ListGroupItem>
+                                <Blog key={blog.id} blog={blog} />
+                            </ListGroupItem>)}
+                        </ListGroup>
                     </div>
                 </Route>
             </Switch>

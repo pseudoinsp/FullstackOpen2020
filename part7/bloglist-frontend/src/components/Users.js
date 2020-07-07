@@ -8,7 +8,7 @@ const Users = ({users}) => {
     return (
         <>
             <h2>Users</h2>
-            <Table striped>
+            <Table striped bordered hover>
                 <tbody>
                 <tr>
                     <th>Name</th>

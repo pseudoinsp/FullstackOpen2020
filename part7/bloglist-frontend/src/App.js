@@ -5,6 +5,7 @@ import NewBlogForm from './components/NewBlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
+import NavigationMenu from './components/NavigationMenu'
 import Users from './components/Users'
 import User from './components/User'
 import Togglable from './components/Togglable'
@@ -157,13 +158,11 @@ const App = () => {
         <>
             <div>
                 <Notification />
-                <h2>Create new</h2>
+                <NavigationMenu user={user} handleLogout={handleLogout} />
+                <h2>blog app</h2>
                 <Togglable buttonLabel='new blog' ref={newBlogFormRef} >
                     <NewBlogForm createNewBlog={addNewBlog} />
                 </Togglable>
-                <h2>blogs</h2>
-                        {user?.username} logged in
-                        <button onClick={() => handleLogout()}>logout</button>
             </div>
             <Switch>
                 <Route path="/users/:id">

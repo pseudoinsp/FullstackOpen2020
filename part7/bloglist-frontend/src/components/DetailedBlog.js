@@ -17,6 +17,11 @@ const DetailedBlog = ({ blog, incrementLike, removeEnabled, remove }) => {
             <br />
             {blog.author}
             <br />
+            <h2>comments</h2>
+            <ul>
+                {blog.comments.map(c => <li key={c}>{c}</li>)}
+            </ul>
+            <br />
             <button id='remove-button' style={showWhenEnabled} onClick={() => remove(blog)}>remove</button>
         </div>
     )

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { Navbar, Nav } from 'react-bootstrap'
 
 const NavigationMenu = ({ user, handleLogout }) => {
     const padding = {
@@ -7,12 +8,23 @@ const NavigationMenu = ({ user, handleLogout }) => {
     }
 
     return (
-      <div>
-        <Link to="/" style={padding}>blogs</Link>
-        <Link to='/users' style={padding}>users</Link>
-        {user?.username} logged in
+      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Nav className="mr-auto">
+            <Nav.Link href="#" as="span">
+              <Link to="/" style={padding}>blogs</Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              <Link to='/users' style={padding}>users</Link>
+            </Nav.Link>
+            <Nav.Link href="#" as="span">
+              {user?.username} logged in
                         <button onClick={() => handleLogout()}>logout</button>
-      </div>
+          </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
     )
   }
 

@@ -1,13 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from "react-router-dom"
+import { Table } from 'react-bootstrap'
 
 const Users = ({users}) => {
     console.log(users)
     return (
         <>
             <h2>Users</h2>
-            <table>
+            <Table striped>
                 <tbody>
                 <tr>
                     <th>Name</th>
@@ -20,7 +21,7 @@ const Users = ({users}) => {
                     </tr> 
                 )}
                 </tbody>
-            </table>
+            </Table>
         </>
     )
 }

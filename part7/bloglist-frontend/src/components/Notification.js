@@ -1,30 +1,29 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Alert } from 'react-bootstrap'
 
 const Notification = () => {
 
     const notification = useSelector(state => state.notification.notification)
     const color = useSelector(state => state.notification.color)
 
-    const notificationStyle = {
-        color,
-        background: 'lightgrey',
-        fontSize: 20,
-        borderStyle: 'solid',
-        borderRadius: 5,
-        padding: 10,
-        marginBottom: 10,
-    }
-
-    console.log(notification)
     if (notification === null) {
         return null
     }
 
+    // TODO ugly
+    if(color === 'red') {
+        return (
+            <Alert variant='danger'>
+                {notification}
+            </Alert>
+        )
+    }
+
     return (
-        <div className="error" style={notificationStyle}>
-            {notification}
-        </div>
+        <Alert variant='success'>
+                {notification}
+            </Alert>
     )
 }
 

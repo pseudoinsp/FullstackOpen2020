@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {
     Switch, Route, useRouteMatch, useHistory    
   } from "react-router-dom"
+import { Form, Button } from 'react-bootstrap'
 
 const App = () => {
     const [username, setUsername] = useState('')
@@ -138,35 +139,29 @@ const App = () => {
             <div>
                 <Notification />
                 <h2>Log in to application</h2>
-                <form onSubmit={handleLogin}>
-                    <div>
-                      username
-                        <input
-                            type="text"
-                            value={username}
-                            name="Username"
-                            id="username"
-                            onChange={({ target }) => setUsername(target.value)}
-                        />
-                    </div>
-                    <div>
-                        password
-                        <input
-                            type="password"
-                            value={password}
-                            name="Password"
-                            id="password"
-                            onChange={({ target }) => setPassword(target.value)}
-                        />
-                    </div>
-                    <button id="login-button" type="submit">login</button>
-                </form>
+                <Form onSubmit={handleLogin}>
+                    <Form.Group>
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control type="text"
+                                value={username}
+                                name="Username"
+                                id="username"
+                                onChange={({ target }) => setUsername(target.value)} />
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control type="password"
+                                value={password}
+                                name="Password"
+                                id="password"
+                                onChange={({ target }) => setPassword(target.value)} />
+                        <Button variant="primary" id="login-button" type="submit">login</Button>
+                    </Form.Group>
+                </Form>
             </div>
         )
     }
 
     return (
-        <>
+        <div class='container'>
             <div>
                 <Notification />
                 <NavigationMenu user={user} handleLogout={handleLogout} />
@@ -193,7 +188,7 @@ const App = () => {
                     </div>
                 </Route>
             </Switch>
-        </>
+        </div>
     )
 }
 

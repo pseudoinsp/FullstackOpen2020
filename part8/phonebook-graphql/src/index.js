@@ -1,4 +1,5 @@
 const { ApolloServer, gql } = require('apollo-server')
+const { GraphQLNonNull } = require('graphql')
 
 let authors = [
   {
@@ -94,7 +95,7 @@ const typeDefs = gql`
     type Book {
         title: String!
         published: Int!
-        author: Author!
+        author: String!
         id: ID!
         genres: [String!]! 
     }
@@ -102,7 +103,7 @@ const typeDefs = gql`
   type Query {
       bookCount: Int!
       authorCount: Int!
-      allBooks(author: String): [Book!]!
+      allBooks(author: String, genre: String): [Book!]!
       allAuthors: [Author!]!
   }
 `
@@ -113,10 +114,16 @@ const resolvers = {
       authorCount: () => authors.length,
       allBooks:  (root, args) => {
         const queriedAuthor = args.author
-        if(!queriedAuthor)
-          return books
-        else
-          return books.filter(b => b.author === queriedAuthor)
+        const queriedGenre = args.genres
+        
+        let queryResult = [...books]
+
+        if(queriedAuthor) 
+            queryResult = queryResult.filter(b => b.author === queriedAuthor)
+        if(queriedGenre)
+            queryResult = queryResult.filter(b => b.genres.includes(queriedGenre))
+
+          return queryResult
       },
       allAuthors: () => authors
   },

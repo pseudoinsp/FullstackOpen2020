@@ -23,7 +23,9 @@ query {
       allBooks  {
         title,
         published,
-        author
+        author {
+          name
+        }
       }
     }
     `

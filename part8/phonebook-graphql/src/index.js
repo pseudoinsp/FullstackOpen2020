@@ -72,7 +72,7 @@ const resolvers = {
         if(filters.length !== 0) {
           return await Book.find({ $and: filters })
         }
-        
+
         return await Book.find({})
       },
       allAuthors: () => Author.find({})
@@ -109,10 +109,12 @@ const resolvers = {
         console.log('saved book!')
         return book
       }
-      catch(e) {
-        console.log(e)
-      }
-      
+      catch(error) {
+        console.log(error)
+        throw new UserInputError(error.message, {
+          invalidArgs: args,
+        })
+      }    
     },
     editAuthor: async (root, args) => {
         const authorName = args.name
@@ -126,7 +128,12 @@ const resolvers = {
   
           return authorToModify
         }
-        catch(e) { console.log(e) }
+        catch(error) {
+          console.log(error)
+          throw new UserInputError(error.message, {
+            invalidArgs: args,
+          })
+        } 
     }
   }
 }

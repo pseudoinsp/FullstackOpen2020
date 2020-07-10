@@ -58,26 +58,21 @@ const resolvers = {
         const queriedAuthor = args.author
         const queriedGenre = args.genre
 
-        const genreFilter = { genres: { $elemMatch: { $eq: queriedGenre } }}
-        
-        let authorFilter
+        let filters = []
+
+        if(queriedGenre) {
+          filters = filters.concat({ genres: { $elemMatch: { $eq: queriedGenre } }})
+        }
         if(queriedAuthor) {
           const author = await Author.findOne({name: queriedAuthor})
-          authorFilter = { author: author._id }
+          const authorFilter = { author: author._id }
+          filters = filters.concat(authorFilter)
         }
 
-        // TODO this is ugly
-        if(queriedAuthor && queriedGenre) {
-          return await Book.find({ $and: [genreFilter, authorFilter] })
+        if(filters.length !== 0) {
+          return await Book.find({ $and: filters })
         }
-        else if(queriedAuthor)
-        {
-          return await Book.find(authorFilter)
-        }
-        else if(queriedGenre) {
-          return await Book.find(genreFilter)
-        }
-
+        
         return await Book.find({})
       },
       allAuthors: () => Author.find({})

@@ -26,7 +26,7 @@ const typeDefs = gql`
     type Book {
         title: String!
         published: Int!
-        author: String!
+        author: Author!
         id: ID!
         genres: [String!]! 
     }
@@ -91,10 +91,10 @@ const resolvers = {
         }
 
         if(filters.length !== 0) {
-          return await Book.find({ $and: filters })
+          return await Book.find({ $and: filters }).populate('author')
         }
 
-        return await Book.find({})
+        return await Book.find({}).populate('author')
       },
       allAuthors: () => Author.find({}),
       me: (root, args, context) => {
@@ -134,7 +134,7 @@ const resolvers = {
             console.log('saved author!')
         }
 
-        const book = new Book({ ... args, author: author._id })
+        const book = new Book({ ... args, author })
         
         await book.save()
         console.log('saved book!')

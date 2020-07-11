@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ALL_BOOKS, ALL_AUTHORS, CREATE_BOOK } from '../queries'
+import { ALL_BOOKS, ALL_AUTHORS, CREATE_BOOK, ALL_BOOKS_WITH_GENRE } from '../queries'
 import { useMutation } from '@apollo/client'
 
 const NewBook = (props) => {
@@ -9,8 +9,20 @@ const NewBook = (props) => {
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
+  const generateRefetches = () => {
+    let refetches = [{ query: ALL_BOOKS, ALL_AUTHORS }]
+
+    const genreRefetches = genres.map(genre => {
+      return { query: ALL_BOOKS_WITH_GENRE, variables: { genre } }
+    })
+
+    refetches = refetches.concat(genreRefetches)
+    return refetches;
+  }
+  
+
   const [ createBook ] = useMutation(CREATE_BOOK, {
-    refetchQueries: [  { query: ALL_BOOKS, ALL_AUTHORS } ],
+    refetchQueries: generateRefetches(),
     onError: (error) => {
       console.log(JSON.stringify(error, null, 2));
     }

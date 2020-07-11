@@ -8,13 +8,14 @@ const Recommendations = ( {show} ) => {
   const [ booksQuery, booksResult ] = useLazyQuery(ALL_BOOKS_WITH_GENRE) 
 
   useEffect(() => {
-    if(!favGenreResult.data) return
+    if(!favGenreResult.data?.me?.favoriteGenre) return
 
+    // TODO refetch query after successful login - currently the page is empty
     booksQuery({variables: { genre: favGenreResult.data.me.favoriteGenre }})
     // eslint-disable-next-line
   }, [favGenreResult.data]) 
-
-  if (!show) {
+ 
+  if (!show || !favGenreResult.data?.me?.favoriteGenre) {
     return null
   }
 

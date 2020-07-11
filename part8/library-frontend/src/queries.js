@@ -42,13 +42,22 @@ query {
     }
     `
 
-    export const ALL_GENRES = gql`
-    query {
-        allBooks  {
-            genres
-          }
-      }
-      `
+  export const ALL_GENRES = gql`
+  query {
+      allBooks  {
+          genres
+        }
+    }
+    `
+
+  export const FAVORITE_GENRE = gql`
+  query {
+      me {
+          favoriteGenre
+        }
+    }
+    `
+
 
 export const CREATE_BOOK = gql`
     mutation addBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {

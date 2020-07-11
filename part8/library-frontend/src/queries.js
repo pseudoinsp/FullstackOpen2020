@@ -27,8 +27,28 @@ query {
           name
         }
       }
+  }
+  `
+
+  export const ALL_BOOKS_WITH_GENRE = gql`
+  query findBooksByGenre($genre: String!) {
+      allBooks(genre: $genre)  {
+          title,
+          published,
+          author {
+            name
+          }
+      }
     }
     `
+
+    export const ALL_GENRES = gql`
+    query {
+        allBooks  {
+            genres
+          }
+      }
+      `
 
 export const CREATE_BOOK = gql`
     mutation addBook($title: String!, $author: String!, $published: Int!, $genres: [String!]!) {

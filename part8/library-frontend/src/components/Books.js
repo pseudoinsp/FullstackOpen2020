@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { ALL_BOOKS, ALL_GENRES, ALL_BOOKS_WITH_GENRE } from '../queries' 
-import { useQuery, useLazyQuery } from '@apollo/client'
+import { ALL_BOOKS, ALL_GENRES, ALL_BOOKS_WITH_GENRE, BOOK_ADDED } from '../queries' 
+import { useQuery, useLazyQuery, useSubscription } from '@apollo/client'
 
 const Books = (props) => {
   const booksQueryResult = useQuery(ALL_BOOKS, {
@@ -12,6 +12,12 @@ const Books = (props) => {
   const [ bookByGenres, bookByGenreResult ] = useLazyQuery(ALL_BOOKS_WITH_GENRE)
   const [books, setBooks] = useState([])
   const [selectedGenre, setSelectedGenre] = useState(null)
+  
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      alert(`${subscriptionData.data.bookAdded.title} was added!`)
+    }
+  })
 
   const handleGenreSelection = newlySelectedGenre => {
     setSelectedGenre(newlySelectedGenre)    

@@ -110,9 +110,7 @@ const resolvers = {
   Author: {
       bookCount: async root => {
           console.log(root)
-          const authorId = root._id
-          const books = await Book.find({author: authorId})
-          return books && books.length || 0
+          return root.books.length
       }
   },
   Mutation: {
@@ -144,6 +142,9 @@ const resolvers = {
         
         await book.save()
         console.log('saved book!')
+
+        author.books = author.books.concat(book)
+        await author.save()
 
         pubsub.publish('BOOK_ADDED', { bookAdded: book })
 

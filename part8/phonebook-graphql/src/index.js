@@ -5,6 +5,8 @@ const Author = require('./models/author')
 const User = require('./models/user')
 require('dotenv').config()
 const jwt = require('jsonwebtoken')
+const { PubSub } = require('apollo-server')
+const pubsub = new PubSub()
 
 console.log('connecting to MongoDB')
 mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
@@ -69,6 +71,10 @@ const typeDefs = gql`
         password: String!
       ): Token
   }
+
+  type Subscription {
+    bookAdded: Book!
+  } 
 `
 
 const resolvers = {
@@ -138,6 +144,9 @@ const resolvers = {
         
         await book.save()
         console.log('saved book!')
+
+        pubsub.publish('BOOK_ADDED', { bookAdded: book })
+
         return book
       }
       catch(error) {
@@ -196,6 +205,11 @@ const resolvers = {
   
       return { value: jwt.sign(userForToken, process.env.SECRET) }
     }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(["BOOK_ADDED"])
+    }
   }
 }
 
@@ -217,6 +231,7 @@ const server = new ApolloServer({
   }  
 })
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })

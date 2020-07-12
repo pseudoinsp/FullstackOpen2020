@@ -4,13 +4,17 @@ import { useQuery, useLazyQuery } from '@apollo/client'
 
 const Recommendations = ( {show} ) => {
 
-  const favGenreResult = useQuery(FAVORITE_GENRE)
+  const favGenreResult = useQuery(FAVORITE_GENRE, { pollInterval: 300 })
   const [ booksQuery, booksResult ] = useLazyQuery(ALL_BOOKS_WITH_GENRE) 
 
   useEffect(() => {
     if(!favGenreResult.data?.me?.favoriteGenre) return
 
     // TODO refetch query after successful login - currently the page is empty
+    // this only solves the problem when there is no user initially - logout -> login still causes empty page
+    // less hacky solution: subscribe to /me query changes, react on that
+    favGenreResult.stopPolling()
+
     booksQuery({variables: { genre: favGenreResult.data.me.favoriteGenre }})
     // eslint-disable-next-line
   }, [favGenreResult.data]) 

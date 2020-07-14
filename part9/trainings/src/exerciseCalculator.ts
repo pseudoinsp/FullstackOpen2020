@@ -53,4 +53,38 @@ const calculateExercises = (exercises: Array<number>, targetExercise: number) : 
     }
 }
 
-console.log(calculateExercises([3, 3, 2, 4.5, 2, 3, 1], 2))
+interface ExercisesInput {
+    exercises: Array<number>;
+    targetExercise: number;
+  }
+  
+  const parseExerciseInputArguments = (args: Array<string>): ExercisesInput => {
+    if (args.length < 4) throw new Error('Not enough arguments');
+
+    let parsedTargetExercise: number;
+  
+    if (!isNaN(Number(args[2]))) {
+      parsedTargetExercise = Number(args[2])
+    } else {
+      throw new Error('Provided values were not numbers!');
+    }
+
+    const exercises = args.slice(3)
+
+    exercises.forEach(e => {
+        if(isNaN(Number(e))) {
+            throw new Error('Provided values were not numbers!');
+        }
+    })
+
+    const parsedExercises = exercises.map(e => Number(e));
+
+    return {
+        exercises: parsedExercises,
+        targetExercise: parsedTargetExercise
+    }
+  }
+
+  const input = parseExerciseInputArguments(process.argv)
+
+console.log(calculateExercises(input.exercises, input.targetExercise))

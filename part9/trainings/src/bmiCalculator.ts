@@ -1,5 +1,5 @@
 export const calculateBmi = (height: number, weight: number) : string => {
-    const bmi : Number = weight / ((height/100)^2);
+    const bmi : number = weight / ((height/100)^2);
 
     if(bmi < 15) {
         return 'Very severely underweight';
@@ -25,7 +25,7 @@ export const calculateBmi = (height: number, weight: number) : string => {
     else {
         return 'Obese Class III (Very severely obese)';
     }
-  }
+  };
 
 //   interface BmiInput {
 //     height: number;

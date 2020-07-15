@@ -1,4 +1,4 @@
-interface ExerciseAnalysis {
+export interface ExerciseAnalysis {
   periodLength: number,
   trainingDays: number,
   success: boolean,
@@ -36,7 +36,7 @@ const evaluateRating = (average: number, target: number) : Rating => {
     }
 };
 
-const calculateExercises = (exercises: Array<number>, targetExercise: number) : ExerciseAnalysis => {
+export const calculateExercises = (exercises: Array<number>, targetExercise: number) : ExerciseAnalysis => {
 
     const average : number = calculateAverage(exercises);
     const evaluatedRating: Rating = evaluateRating(average,  targetExercise);
@@ -52,23 +52,24 @@ const calculateExercises = (exercises: Array<number>, targetExercise: number) : 
     };
 };
 
-interface ExercisesInput {
+export interface ExercisesInput {
     exercises: Array<number>;
     targetExercise: number;
   }
-  
-  const parseExerciseInputArguments = (args: Array<string>): ExercisesInput => {
-    if (args.length < 4) throw new Error('Not enough arguments');
 
-    let parsedTargetExercise: number;
-  
-    if (!isNaN(Number(args[2]))) {
-      parsedTargetExercise = Number(args[2]);
-    } else {
-      throw new Error('Provided values were not numbers!');
+export const parseExerciseInputArgumentsFromJson = (args: string): ExercisesInput => {
+    const inputAsJson = JSON.parse(args);
+
+    if(!inputAsJson.target || !inputAsJson.daily_exercises) {
+        throw new Error('Parameters missing');
     }
 
-    const exercises = args.slice(3);
+    const parsedTargetExercise = Number(inputAsJson.target);
+    const exercises: Array<string> = inputAsJson.daily_exercises;
+
+    if (isNaN(parsedTargetExercise)) {
+        throw new Error('Provided values were not numbers!');
+    };
 
     exercises.forEach(e => {
         if(isNaN(Number(e))) {
@@ -83,7 +84,34 @@ interface ExercisesInput {
         targetExercise: parsedTargetExercise
     };
   };
+  
+//   const parseExerciseInputArguments = (args: Array<string>): ExercisesInput => {
+//     if (args.length < 4) throw new Error('Not enough arguments');
 
-  const input = parseExerciseInputArguments(process.argv);
+//     let parsedTargetExercise: number;
+  
+//     if (!isNaN(Number(args[2]))) {
+//       parsedTargetExercise = Number(args[2]);
+//     } else {
+//       throw new Error('Provided values were not numbers!');
+//     }
 
-console.log(calculateExercises(input.exercises, input.targetExercise));
+//     const exercises = args.slice(3);
+
+//     exercises.forEach(e => {
+//         if(isNaN(Number(e))) {
+//             throw new Error('Provided values were not numbers!');
+//         }
+//     });
+
+//     const parsedExercises = exercises.map(e => Number(e));
+
+//     return {
+//         exercises: parsedExercises,
+//         targetExercise: parsedTargetExercise
+//     };
+//   };
+
+//   const input = parseExerciseInputArguments(process.argv);
+
+// console.log(calculateExercises(input.exercises, input.targetExercise));

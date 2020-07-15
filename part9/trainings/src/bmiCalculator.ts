@@ -1,4 +1,4 @@
-const calculateBmi = (height: number, weight: number) : string => {
+export const calculateBmi = (height: number, weight: number) : string => {
     const bmi : Number = weight / ((height/100)^2);
 
     if(bmi < 15) {
@@ -27,25 +27,25 @@ const calculateBmi = (height: number, weight: number) : string => {
     }
   }
 
-  interface BmiInput {
-    height: number;
-    weight: number;
-  }
+//   interface BmiInput {
+//     height: number;
+//     weight: number;
+//   }
   
-  const parseBmiInputArguments = (args: Array<string>): BmiInput => {
-    if (args.length < 4) throw new Error('Not enough arguments');
-    if (args.length > 4) throw new Error('Too many arguments');
+//   const parseBmiInputArguments = (args: Array<string>): BmiInput => {
+//     if (args.length < 4) throw new Error('Not enough arguments');
+//     if (args.length > 4) throw new Error('Too many arguments');
   
-    if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
-      return {
-        height: Number(args[2]),
-        weight: Number(args[3])
-      }
-    } else {
-      throw new Error('Provided values were not numbers!');
-    }
-  }
+//     if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+//       return {
+//         height: Number(args[2]),
+//         weight: Number(args[3])
+//       }
+//     } else {
+//       throw new Error('Provided values were not numbers!');
+//     }
+//   }
 
-  const parsedInput : BmiInput = parseBmiInputArguments(process.argv)
+//   const parsedInput : BmiInput = parseBmiInputArguments(process.argv)
   
-  console.log(calculateBmi(parsedInput.height, parsedInput.weight));
+//   console.log(calculateBmi(parsedInput.height, parsedInput.weight));

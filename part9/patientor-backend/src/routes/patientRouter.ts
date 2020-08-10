@@ -13,6 +13,7 @@ router.get('/:id', (req, res) => {
   const requestedId = req.params.id;
   const matchedPatient = patientService.getPatient(requestedId);
 
+  console.log(`queried patient with id ${requestedId}`);
   if(matchedPatient) {
     res.status(200).json(matchedPatient);
   }

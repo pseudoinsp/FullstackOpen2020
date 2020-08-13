@@ -14,7 +14,7 @@ export function generateUuid() {
 
 export const toNewPatient = (object: any): NewPatient => {
     return {
-      dateOfBirth: parseDate(object.date),
+      dateOfBirth: parseDate(object.dateOfBirth),
       name: parseString(object.name),
       ssn: parseString(object.ssn),
       occupation: parseString(object.occupation),

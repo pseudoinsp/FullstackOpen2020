@@ -26,6 +26,7 @@ interface BaseEntry {
   }
 
   interface HospitalEntry extends BaseEntry {
+    type: "Hospital";
     discharge : Discharge
   }
 
@@ -35,6 +36,7 @@ interface BaseEntry {
   }
 
   interface OccupationalHealthcareEntry extends BaseEntry {
+    type: "OccupationalHealthcare";
     employerName: string,
     sickLeave : Interval
   }

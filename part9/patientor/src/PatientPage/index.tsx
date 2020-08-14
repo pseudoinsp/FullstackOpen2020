@@ -6,7 +6,7 @@ import { useStateValue, updatePatient } from "../state";
 import { Header, Container, Icon } from "semantic-ui-react";
 
 const PatientPage: React.FC<{ patientId: string }> = ({patientId}) => {
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
   const [patient, setPatient] = React.useState<Patient | undefined>();
 
   // TODO this should be abstracted away and the detection of whether the patient is detailed should be solved
@@ -36,7 +36,7 @@ const PatientPage: React.FC<{ patientId: string }> = ({patientId}) => {
     // eslint-disable-next-line
   }, [patientId]);
 
-  if(!patient) return null;
+  if(!patient || !diagnoses) return null;
 
   const renderGender = (gender: Gender) => {
     switch(gender) 
@@ -49,8 +49,6 @@ const PatientPage: React.FC<{ patientId: string }> = ({patientId}) => {
         return <Icon name='genderless' />;
     }
    };
-
-   console.log(patient);
 
   return (
     <div className="App">
@@ -65,7 +63,7 @@ const PatientPage: React.FC<{ patientId: string }> = ({patientId}) => {
               <div key={e.id}>
                 <p>{e.date} <i>{e.description}</i></p>
                 <ul>
-                  {e.diagnosisCodes?.map(c => <li key={c}>{c}</li>)}
+                  {e.diagnosisCodes?.map(c => <li key={c}>{c} {diagnoses[c]?.name}</li>)}
                 </ul>
               </div>
           )}

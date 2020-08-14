@@ -50,6 +50,8 @@ const PatientPage: React.FC<{ patientId: string }> = ({patientId}) => {
     }
    };
 
+   console.log(patient);
+
   return (
     <div className="App">
        <Container>
@@ -58,6 +60,15 @@ const PatientPage: React.FC<{ patientId: string }> = ({patientId}) => {
           ssn: {patient.ssn}
           <br/>
           occupation: {patient.occupation}
+          <Header as="h3">entries</Header>
+          {patient.entries.map(e => 
+              <div key={e.id}>
+                <p>{e.date} <i>{e.description}</i></p>
+                <ul>
+                  {e.diagnosisCodes?.map(c => <li key={c}>{c}</li>)}
+                </ul>
+              </div>
+          )}
         </div>
         </Container>
     </div>

@@ -33,6 +33,32 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit }) => {
         healthCheckRating: HealthCheckRating.LowRisk
       }}
       onSubmit={onSubmit}
+      validate={values => {
+        const requiredError = "Field is required";
+        const errors: { [field: string]: string } = {};
+        if (!values.date) {
+          errors.date = requiredError;
+        }
+        if (!values.description) {
+          errors.description = requiredError;
+        }
+        if (!values.date) {
+          errors.date = requiredError;
+        }
+        if(!Date.parse(values.date)) {
+            errors.date = "Invalid date format";
+        } 
+        if (!values.healthCheckRating && values.healthCheckRating !== 0) {
+          errors.healthCheckRating = requiredError;
+        }
+        if(!Object.values(HealthCheckRating).includes(values.healthCheckRating)) {
+            errors.healthCheckRating = "Unknown health check rating";
+        }
+        if (!values.specialist) {
+            errors.specialist = requiredError;
+          }
+        return errors;
+      }}
     >
       {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
         return (
@@ -61,7 +87,7 @@ export const AddEntryForm: React.FC<Props> = ({ onSubmit }) => {
             diagnoses={Object.values(diagnoses)}
             />    
             <Field
-                label="healthCheckRating"
+                label="Health check rating"
                 name="healthCheckRating"
                 component={NumberField}
                 min={0}

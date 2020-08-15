@@ -3,8 +3,9 @@ import axios from "axios";
 import { apiBaseUrl } from "../constants";
 import { Patient, Gender } from "../types";
 import { useStateValue, updatePatient } from "../state";
-import { Header, Container, Icon } from "semantic-ui-react";
+import { Header, Container, Icon, Segment } from "semantic-ui-react";
 import EntryDetails from "../components/EntryDetails";
+import AddEntryForm, { EntryFormValues } from "../AddEntry/AddEntryForm";
 
 const PatientPage: React.FC<{ patientId: string }> = ({patientId}) => {
   const [{ patients }, dispatch] = useStateValue();
@@ -37,6 +38,20 @@ const PatientPage: React.FC<{ patientId: string }> = ({patientId}) => {
     // eslint-disable-next-line
   }, [patientId]);
 
+  const submitNewEntry = async (values: EntryFormValues) => {
+    console.log(values);
+    try {
+      const { data: updatedPatient } = await axios.post<Patient>(
+        `${apiBaseUrl}/patients/${patientId}/entries`,
+        values
+      );
+      dispatch(updatePatient(updatedPatient));
+      setPatient(updatedPatient);
+    } catch (e) {
+      console.error(e.response.data);
+    }
+  };
+
   if(!patient) return null;
 
   const renderGender = (gender: Gender) => {
@@ -59,9 +74,13 @@ const PatientPage: React.FC<{ patientId: string }> = ({patientId}) => {
           ssn: {patient.ssn}
           <br/>
           occupation: {patient.occupation}
-          <Header as="h3">entries</Header>
+          <Header as="h3">Entries</Header>
           {patient.entries.map(e => <EntryDetails key={e.id} entry={e} />)}
-        </div>
+          </div>
+          <Segment>
+            <Header as="h3">Add entry</Header>
+            <AddEntryForm onSubmit={(data) => submitNewEntry(data)} />
+          </Segment>
         </Container>
     </div>
   );

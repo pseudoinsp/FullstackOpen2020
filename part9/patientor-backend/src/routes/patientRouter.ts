@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import express from 'express';
 import patientService from '../services/patientService';
-import { toNewPatient } from '../utils';
+import { toNewPatient, toNewEntry } from '../utils';
 
 const router = express.Router();
 
@@ -19,6 +19,18 @@ router.get('/:id', (req, res) => {
   }
   else {
     res.status(404);
+  }
+});
+
+router.post('/:id/entries', (req, res) => {
+  try {
+    const entry = toNewEntry(req.body);
+    const patientid = req.params.id;
+    const modifiedPatient = patientService.addEntry(patientid, entry);
+    res.json(modifiedPatient);
+  } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    res.status(400).send(e.message);
   }
 });
 

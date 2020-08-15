@@ -2,6 +2,7 @@ import patientData from '../../data/patients';
 
 import { Patient, NonSensitivePatient, NewPatient } from '../types/Patient';
 import { generateUuid } from '../utils';
+import { NewEntry } from '../types/Entry';
 
 const patients: Array<Patient> = patientData;
 
@@ -33,9 +34,22 @@ const addPatient = (entry: NewPatient): Patient => {
   return newPatient;
 };
 
+const addEntry = (patientid: string, entry: NewEntry): Patient => {
+  const patient = patients.find(p => p.id === patientid);
+
+  if(!patient) throw new Error();
+  const newEntry = {
+    ...entry,
+    id: generateUuid(),
+  };
+  patient.entries.push(newEntry);
+  return patient;
+};
+
 export default {
   getPatients,
   getPatient,
   getNonSensitivePatients,
   addPatient,
+  addEntry
 };
